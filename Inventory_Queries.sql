@@ -42,6 +42,11 @@ GROUP BY p.category
 ORDER BY total_revenue DESC
 LIMIT 10;
 
-
-
+--Customer purchase behaviour based on region
+SELECT u.id, u.city, u.state, COUNT(o.order_id) AS total_orders, SUM(oi.sale_price) AS total_spent
+FROM `bigquery-public-data.thelook_ecommerce.users` AS u
+JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON u.id = o.order_id
+JOIN `bigquery-public-data.thelook_ecommerce.order_items` AS oi ON o.order_id = oi.order_id
+GROUP BY u.id, u.city, u.state
+ORDER BY total_spent DESC;
 
