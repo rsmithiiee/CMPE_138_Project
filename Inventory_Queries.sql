@@ -50,3 +50,10 @@ JOIN `bigquery-public-data.thelook_ecommerce.order_items` AS oi ON o.order_id = 
 GROUP BY u.id, u.city, u.state
 ORDER BY total_spent DESC;
 
+--Top 10 worst selling products
+SELECT p.name, COUNT(oi.id) AS total_orders
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.id=p.id
+GROUP BY p.name
+ORDER BY total_orders ASC
+LIMIT 10;
