@@ -8,12 +8,11 @@ ORDER BY return_count DESC
 LIMIT 10
 
 --2. inventory turnover
-SELECT p.category, COUNT(DISTINCT i.id) AS total_inventory, COUNT(DISTINCT CASE WHEN i.sold_at IS NOT NULL THEN i.id END) AS items_sold,
-ROUND(COUNT(DISTINCT CASE WHEN i.sold_at IS NOT NULL THEN i.id END) * 1.0 / NULLIF(COUNT(DISTINCT i.id), 0), 2) AS turnover_rate
+SELECT p.id AS product_id, COUNT(DISTINCT i.id) AS total_inventory, COUNT(DISTINCT CASE WHEN i.sold_at IS NOT NULL THEN i.id END) AS items_sold,ROUND(COUNT(DISTINCT CASE WHEN i.sold_at IS NOT NULL THEN i.id END) * 1.0 / NULLIF(COUNT(DISTINCT i.id), 0), 2) AS turnover_rate
 FROM `bigquery-public-data.thelook_ecommerce.products` AS p
-JOIN `bigquery-public-data.thelook_ecommerce.inventory_items` AS inv ON p.id = inv.product_id
-GROUP BY p.category
-ORDER BY turnover_rate DESC
+JOIN `bigquery-public-data.thelook_ecommerce.inventory_items` AS i ON p.id = i.product_id
+GROUP BY p.id
+ORDER BY total_inventory DESC, turnover_rate DESC;
 
 --3. Stock Level Monitoring
 SELECT ii.product_id, ii.product_name, COUNT(ii.id) AS stock_quantity
