@@ -22,17 +22,17 @@ GROUP BY sd.product_id
 ORDER BY total_quantity_sold DESC, total_sales_revenue DESC
 LIMIT 10;
 
---Inventory items that sell the most
+--Inventory items that sell the most (optimised)
 WITH SoldInventory AS(
     SELECT inv.id AS inventory_item_id, inv.product_id, inv.sold_at
     FROM `bigquery-public-data.thelook_ecommerce.inventory_items` AS inv
     WHERE inv.sold_at IS NOT NULL
 )
-SELECT si.inventory_item_id, p.name AS product_name, p.category AS product_category, COUNT(*) AS total_sales
+SELECT p.id, p.name AS product_name, p.category AS product_category, COUNT(*) AS total_sales
 FROM SoldInventory AS si
 JOIN `bigquery-public-data.thelook_ecommerce.products` AS p
 ON si.product_id = p.id
-GROUP BY si.inventory_item_id, p.name, p.category
+GROUP BY p.id, p.name, p.category
 ORDER BY total_sales DESC
 LIMIT 10;
 
