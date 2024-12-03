@@ -73,3 +73,12 @@ WHERE p.category = select_category
 GROUP BY oi.product_id, p.name
 ORDER BY total_quantity_sold DESC, total_sales_revenue DESC
 LIMIT 10;
+
+--Revenue and sales volume by product category
+SELECT p.category AS product_category, SUM(oi.sale_price) AS total_revenue, COUNT(oi.id) AS total_units_sold
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p
+ON oi.product_id = p.id
+GROUP BY p.category
+ORDER BY total_revenue DESC, total_units_sold DESC
+
