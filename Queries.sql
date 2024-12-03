@@ -1,3 +1,5 @@
+--RANDOM QUERIES
+
 --most returned items
 SELECT p.id, p.name, p.category, COUNT(*) AS return_count
 FROM `bigquery-public-data.thelook_ecommerce.order_items` AS o_i
