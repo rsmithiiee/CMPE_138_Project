@@ -136,3 +136,15 @@ WHERE inv.sold_at IS NOT NULL
 GROUP BY inv.id, p.name, p.category
 ORDER BY total_sales DESC
 LIMIT 10;
+
+--Inventory turnover rate
+WITH InventoryStats AS(
+    SELECT p.category AS product_category, COUNT(DISTINCT inv.id) AS total_inventory, COUNT(DISTINCT CASE WHEN inv.sold_at IS NOT NULL THEN inv.id END) AS items_sold
+    FROM `bigquery-public-data.thelook_ecommerce.inventory_items` AS inv
+    JOIN `bigquery-public-data.thelook_ecommerce.products` AS p
+    ON inv.product_id = p.id
+    GROUP BY p.category
+)
+SELECT product_category, total_inventory,items_sold, ROUND(CASE WHEN total_inventory > 0 THEN items_sold * 1.0 / total_inventory ELSE 0 END, 2) AS turnover_rate
+FROM InventoryStats
+ORDER BY turnover_rate DESC;
