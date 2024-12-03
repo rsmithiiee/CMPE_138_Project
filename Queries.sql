@@ -190,9 +190,11 @@ ORDER BY total_quantity_sold, total_sales_revenue
 LIMIT 10;
 
 --Inventory items that are ordered the most
-SELECT p.name,
-COUNT(oi.order_id) AS total_orders
-FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
-JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.id=p.id
-GROUP BY p.name
-ORDER BY total_orders DESC;
+SELECT inv.id AS inventory_item_id, p.name AS product_name, p.category AS product_category, COUNT(*) AS total_sales
+FROM `bigquery-public-data.thelook_ecommerce.inventory_items` AS inv
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p
+ON inv.product_id = p.id
+WHERE inv.sold_at IS NOT NULL
+GROUP BY inv.id, p.name, p.category
+ORDER BY total_sales DESC
+LIMIT 10;
