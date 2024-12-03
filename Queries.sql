@@ -100,7 +100,9 @@ SELECT traffic_source, COUNT (traffic_source) AS num_of_users
 FROM `bigquery-public-data.thelook_ecommerce.users`
 GROUP BY traffic_source
 
---Orders by brand per month
+--Orders by brand
+  
+--per month
 --Initialize variable to specify brand name
 DECLARE var_brand_name STRING;
 SET var_brand_name = "Fruit of the Loom";
@@ -113,7 +115,7 @@ WHERE p.brand = var_brand_name
 GROUP BY p.brand, month, year
 ORDER BY year, month; 
 
---Orders by brand overall
+--Total
 --Initialize variable to specify brand name
 DECLARE var_brand_name STRING;
 SET var_brand_name = "Fruit of the Loom";
@@ -123,4 +125,40 @@ FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
 JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
 JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON oi.order_id = o.order_id
 WHERE p.brand = var_brand_name
-GROUP BY p.brand 
+GROUP BY p.brand
+
+
+--Customers by location for a specific brand for city, state, or country
+--Declare variable to store brand name
+DECLARE var_brand_name STRING;
+SET var_brand_name = "Fruit of the Loom";
+
+--Show customers by city
+SELECT u.city, COUNT(DISTINCT u.id) AS number_of_customers
+FROM `bigquery-public-data.thelook_ecommerce.users` AS u
+JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON u.id = o.user_id
+JOIN `bigquery-public-data.thelook_ecommerce.order_items` AS oi ON o.order_id = oi.order_id
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.brand = var_brand_name
+GROUP BY u.city
+ORDER BY number_of_customers DESC;
+
+--Show customers by state
+SELECT u.state, COUNT(DISTINCT u.id) AS number_of_customers
+FROM `bigquery-public-data.thelook_ecommerce.users` AS u
+JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON u.id = o.user_id
+JOIN `bigquery-public-data.thelook_ecommerce.order_items` AS oi ON o.order_id = oi.order_id
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.brand = var_brand_name
+GROUP BY u.state
+ORDER BY number_of_customers DESC;
+
+--Show customers by country
+SELECT u.country, COUNT(DISTINCT u.id) AS number_of_customers
+FROM `bigquery-public-data.thelook_ecommerce.users` AS u
+JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON u.id = o.user_id
+JOIN `bigquery-public-data.thelook_ecommerce.order_items` AS oi ON o.order_id = oi.order_id
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.brand = var_brand_name
+GROUP BY u.country
+ORDER BY number_of_customers DESC;
