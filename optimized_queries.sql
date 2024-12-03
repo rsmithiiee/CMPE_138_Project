@@ -48,3 +48,22 @@ ON si.product_id = p.id
 GROUP BY si.inventory_item_id, p.name, p.category
 ORDER BY total_sales DESC
 LIMIT 10;
+
+--Top 10 products sold by specified brand optimized
+DECLARE var_brand_name STRING;
+SET var_brand_name = "Fruit of the Loom";
+
+WITH filtered_products AS (
+  SELECT id AS product_id, name
+  FROM `bigquery-public-data.thelook_ecommerce.products`
+  WHERE brand = var_brand_name
+)
+
+SELECT oi.product_id, fp.name AS product_name, SUM(oi.sale_price) AS total_sales_revenue, COUNT(oi.id) AS total_quantity_sold
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN filtered_products AS fp
+ON oi.product_id = fp.product_id
+GROUP BY oi.product_id, fp.name
+ORDER BY total_quantity_sold DESC, total_sales_revenue DESC
+LIMIT 10;
+
