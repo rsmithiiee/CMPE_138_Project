@@ -164,3 +164,27 @@ JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p
 WHERE p.brand = var_brand_name
 GROUP BY u.country
 ORDER BY number_of_customers DESC;
+
+
+--Show top 10 best and worst selling products for a specific brand
+--Declare variable to store brand name
+DECLARE var_brand_name STRING;
+SET var_brand_name = "Fruit of the Loom";
+
+--Top 10 best selling products
+SELECT oi.product_id, p.name AS product_name, SUM(oi.sale_price) AS total_sales_revenue, COUNT(oi.id) AS total_quantity_sold
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.brand = var_brand_name
+GROUP BY oi.product_id, p.name
+ORDER BY total_quantity_sold DESC, total_sales_revenue DESC
+LIMIT 10;
+
+--Top 10 worst selling products
+SELECT oi.product_id, p.name AS product_name, SUM(oi.sale_price) AS total_sales_revenue, COUNT(oi.id) AS total_quantity_sold
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.brand = var_brand_name
+GROUP BY oi.product_id, p.name
+ORDER BY total_quantity_sold, total_sales_revenue
+LIMIT 10;
