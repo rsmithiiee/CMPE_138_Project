@@ -62,9 +62,9 @@ LIMIT 10;
 
 --Show top 10 selling products by user selected category
 --Declare variable for category selection
---Can use 'Accessories' as another category in demo
+--Can use "Accessories" as another category in demo
 DECLARE select_category STRING;
-SET select_category = 'Shorts';
+SET select_category = "Shorts";
 
 SELECT oi.product_id, p.name AS product_name, SUM(oi.sale_price) AS total_sales_revenue, COUNT(oi.id) AS total_quantity_sold
 FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
@@ -80,5 +80,18 @@ FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
 JOIN `bigquery-public-data.thelook_ecommerce.products` AS p
 ON oi.product_id = p.id
 GROUP BY p.category
+ORDER BY total_revenue DESC, total_units_sold DESC
+
+--Revenue and sales volume for a specific product
+--Declare variable for product_name
+--"Nautica Mens Belted Cargo Shorts" for testing
+DECLARE var_pname STRING;
+SET var_pname = "Rip Curl Men's Constant Walkshort";
+
+SELECT p.id AS product_id, p.name AS product_name, SUM(oi.sale_price) AS total_revenue, COUNT(oi.id) AS total_units_sold
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+WHERE p.name = var_pname
+GROUP BY p.id, p.name
 ORDER BY total_revenue DESC, total_units_sold DESC
 
