@@ -95,3 +95,8 @@ WHERE p.name = var_pname
 GROUP BY p.id, p.name
 ORDER BY total_revenue DESC, total_units_sold DESC
 
+--Traffic sources that bring in the most users
+SELECT traffic_source, COUNT (traffic_source) AS num_of_users
+FROM `bigquery-public-data.thelook_ecommerce.users`
+GROUP BY traffic_source
+
