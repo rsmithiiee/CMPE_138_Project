@@ -188,3 +188,11 @@ WHERE p.brand = var_brand_name
 GROUP BY oi.product_id, p.name
 ORDER BY total_quantity_sold, total_sales_revenue
 LIMIT 10;
+
+--Inventory items that are ordered the most
+SELECT p.name,
+COUNT(oi.order_id) AS total_orders
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.id=p.id
+GROUP BY p.name
+ORDER BY total_orders DESC;
