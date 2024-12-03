@@ -100,3 +100,16 @@ SELECT traffic_source, COUNT (traffic_source) AS num_of_users
 FROM `bigquery-public-data.thelook_ecommerce.users`
 GROUP BY traffic_source
 
+--Orders by brand per month
+--Initialize variable to specify brand name
+DECLARE var_brand_name STRING;
+SET var_brand_name = "Fruit of the Loom";
+
+SELECT p.brand, EXTRACT(MONTH FROM o.created_at) AS month, EXTRACT(YEAR FROM o.created_at) AS year, COUNT(*) AS num_of_orders
+FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi
+JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id
+JOIN `bigquery-public-data.thelook_ecommerce.orders` AS o ON oi.order_id = o.order_id
+WHERE p.brand = var_brand_name
+GROUP BY p.brand, month, year
+ORDER BY year, month; 
+
