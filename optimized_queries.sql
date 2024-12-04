@@ -1,4 +1,5 @@
---Top 10 Best selling products selected by user category
+-- Jeric Montepalco
+--Top 10 Best selling products selected by user category (optimized) 
 DECLARE select_category STRING;
 SET select_category = "Shorts";
 
